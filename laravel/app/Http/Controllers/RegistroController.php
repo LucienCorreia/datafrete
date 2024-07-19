@@ -11,6 +11,7 @@ use App\Http\Requests\RegistroImportarRequest;
 use App\Contracts\Services\CepService;
 use League\Csv\Reader;
 use App\Jobs\ImportarRegistrosAsyncJob;
+use Illuminate\Support\Facades\Bus;
 
 class RegistroController extends Controller
 {
@@ -85,9 +86,14 @@ class RegistroController extends Controller
         $csv = Reader::createFromPath($file->path(), 'r');
         $registros = $csv->getRecords();
 
+        $registros = collect($registros)->chunk(25);
+        $jobs = [];
+
         foreach ($registros as $key => $row) {
-            dispatch(new ImportarRegistrosAsyncJob($row))->delay(now()->addSeconds((int) $key));
+            $jobs[] = new ImportarRegistrosAsyncJob($row);
         }
+
+        $batch = Bus::batch($jobs)->name('Importar registros')->dispatch();
 
         return redirect()->route('registros.index');
     }
