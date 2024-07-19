@@ -6,10 +6,12 @@ RUN apk --no-cache add pcre-dev ${PHPIZE_DEPS} \
   && apk del pcre-dev ${PHPIZE_DEPS}
 
 RUN apk add --no-cache \
+    nodejs \
+    npm \
     libpng-dev \
     libjpeg-turbo-dev \
     libxml2-dev \
-    libzip-dev \
+    libzip-dev \  
     icu-dev \
     zlib-dev \
     libpng \
@@ -38,11 +40,6 @@ RUN chown -R www-data:www-data /app
 USER www-data
 
 COPY laravel /app
-
-USER root
-
-RUN chmod 777 -R /app/storage/framework/views
-RUN chmod 777 -R /app/storage/logs
 
 USER www-data
 
