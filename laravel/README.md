@@ -16,7 +16,7 @@ Na pasta `files` tem dois arquivos CSV para testar, sendo um com poucos registro
 ### Estratégia de importaão em massa
 
 - Cada linha do arquivo csv vira um job intervalado em 1seg entre cada um para evitar o bloquei da API externa
-- Os retornos são mantidos em cache no redis para evitar consultas repetidas na API e diminiur o tempo de execuão da task
+- Os retornos são mantidos em cache no redis para evitar consultas repetidas na API e diminiur o tempo de execução do job
 
 ### Biblotecas PHP utilizadas
 
