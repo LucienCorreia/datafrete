@@ -25,7 +25,7 @@ services:
       dockerfile: Dockerfile.nginx
     container_name: nginx
     ports:
-      - 8088:80
+      - ${APP_PORT}:80
     volumes:
       - ./laravel:/app
       - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf

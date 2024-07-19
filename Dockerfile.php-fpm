@@ -35,13 +35,9 @@ RUN apk add --no-cache \
 
 WORKDIR /app
 
-RUN chown -R www-data:www-data /app
-
-USER www-data
-
 COPY laravel /app
 
-USER www-data
+RUN chown -R root:root /app
 
 EXPOSE 9000
 

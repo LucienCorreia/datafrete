@@ -33,17 +33,8 @@ RUN apk add --no-cache \
 
 WORKDIR /app
 
-RUN chown -R www-data:www-data /app
-
-USER www-data
-
 COPY laravel /app
 
-USER root
-
-RUN chmod 777 -R /app/storage/framework/views
-RUN chmod 777 -R /app/storage/logs
-
-USER www-data
+RUN chown -R root:root /app
 
 CMD ["php artisan queue:work --queue=default"]
