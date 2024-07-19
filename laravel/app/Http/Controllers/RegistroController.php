@@ -16,7 +16,7 @@ class RegistroController extends Controller
 {
     public function index()
     {
-        $registros = Registro::all();
+        $registros = Registro::paginate();
 
         return view('modules.registros.index', ['registros' => $registros]);
     }
@@ -40,6 +40,8 @@ class RegistroController extends Controller
         $request->merge(['distancia' => $distancia]);
 
         $registro = Registro::create($request->all());
+
+        $request->session()->flash('success', 'Os registros serão calculados e salvos em breve, aguarde um momento!');
 
         return redirect()->route('registros.index');
     }

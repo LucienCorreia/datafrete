@@ -8,6 +8,11 @@
                     <div class="card-header">Registros</div>
 
                     <div class="card-body">
+                        @if(session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
 
                         <table class="table">
                             <tr>
@@ -26,17 +31,19 @@
                                     <td>@datetime($registro->created_at)</td>
                                     <td>@datetime($registro->updated_at)</td>
                                     <td>
-                                        <a class="btn btn-primary" href="{{ route('registros.edit', $registro->id) }}">Editar</a>
-                                        <form method="POST" action="{{ route('registros.destroy', $registro->id) }}">
+                                        <div class="btn-group" role="group">
+                                            <a class="btn btn-warning" href="{{ route('registros.edit', $registro->id) }}">Editar</a>
+                                            <button type="button" class="btn btn-danger" onclick="event.preventDefault(); document.querySelector('form').submit();">Excluir</button>
+                                        </div>
+                                        <form id="delete-form-{{ $registro->id }}" method="POST" action="{{ route('registros.destroy', $registro->id) }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Excluir</button>
                                         </form>
                                     </td>
                                 </tr>
                             @endforeach
                         </table>
-
+                        {{ $registros->links() }}
                     </div>
                     <div class="card-footer">
                         <a href="{{ route('registros.create') }}" class="btn btn-primary">Criar Registro</a>

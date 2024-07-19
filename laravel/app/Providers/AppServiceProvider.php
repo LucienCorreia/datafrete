@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Contracts\Services\CepService as CepServiceContract;
 use App\Services\CepService;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Paginator::useBootstrapFive();
         Blade::directive('datetime', function (string $expression) {
             return "<?php echo ($expression)->format('d/m/Y H:i'); ?>";
         });
