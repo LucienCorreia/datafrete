@@ -1,0 +1,51 @@
+FROM php:8.3-fpm-alpine
+
+RUN apk --no-cache add pcre-dev ${PHPIZE_DEPS} \
+  && pecl install redis-5.3.7 \
+  && docker-php-ext-enable redis \
+  && apk del pcre-dev ${PHPIZE_DEPS}
+
+RUN apk add --no-cache \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    libxml2-dev \
+    libzip-dev \
+    icu-dev \
+    zlib-dev \
+    libpng \
+    libjpeg-turbo \
+    libxml2 \
+    libzip \
+    zlib \
+    zip \
+    unzip \
+    postgresql-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install -j$(nproc) pdo \
+    && docker-php-ext-install pdo_pgsql \
+    && docker-php-ext-install pgsql \
+    && docker-php-ext-install zip \
+    && docker-php-ext-install intl \
+    && docker-php-ext-install bcmath \
+    && docker-php-ext-install xml \
+    && docker-php-ext-enable redis
+
+WORKDIR /app
+
+RUN chown -R www-data:www-data /app
+
+USER www-data
+
+COPY laravel /app
+
+USER root
+
+RUN chmod 777 -R /app/storage/framework/views
+RUN chmod 777 -R /app/storage/logs
+
+USER www-data
+
+EXPOSE 9000
+
+CMD ["php-fpm"]
