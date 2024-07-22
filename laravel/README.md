@@ -1,6 +1,7 @@
 ### Como subir
 
 Para subir tudo rode o comando `docker compose --env-file=./docker.env up` dentro da pasta do projeto
+Rodar as migrations com o comando: `docker compose run --rm artisan php artisan migrate`
 Na pasta `files` tem dois arquivos CSV para testar, sendo um com poucos registros e outros com muitos
 
 ### Tecnologias

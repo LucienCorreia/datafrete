@@ -85,15 +85,17 @@ class RegistroController extends Controller
 
         $csv = Reader::createFromPath($file->path(), 'r');
         $registros = $csv->getRecords();
-
-        $registros = collect($registros)->chunk(25);
-        $jobs = [];
+        $chain = [];
 
         foreach ($registros as $key => $row) {
-            $jobs[] = new ImportarRegistrosAsyncJob($row);
+            $chain[] = new ImportarRegistrosAsyncJob($row);
         }
 
-        $batch = Bus::batch($jobs)->name('Importar registros')->dispatch();
+        Bus::chain($chain)->onQueue('default')->dispatch();
+
+        $countRegistros = collect($registros)->count();
+
+        $request->session()->flash('success', "Os $countRegistros registros serão importados em breve, aguarde um momento!");
 
         return redirect()->route('registros.index');
     }

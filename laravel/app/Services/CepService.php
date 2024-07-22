@@ -7,8 +7,8 @@ use App\Contracts\Services\CepService as CepServiceContract;
 use App\Contracts\Repositories\CepRepository as CepRepositoryContract;
 use GuzzleHttp\Client;
 use App\Contracts\Entities\CoordinatesEntity;
-use App\Exepctions\CepNaoRetornaCoordenadasException;
-use App\Exepctions\CepNaoExisteException;
+use App\Exceptions\CepNaoRetornaCoordenadasException;
+use App\Exceptions\CepNaoExisteException;
 
 class CepService implements CepServiceContract
 {
@@ -39,10 +39,14 @@ class CepService implements CepServiceContract
                 $data['street'],
                 new CoordinatesEntity($data['location']['coordinates']['latitude'], $data['location']['coordinates']['longitude']),
             );
+
             return $entity;
-        } catch (\Exception $e) {
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             throw new CepNaoExisteException($cep);
+        } catch (\Exception $e) {
+            throw $e;
         }
+
     }
 
     public function distancia(CoordinatesEntity $origem, CoordinatesEntity $destino): float
